@@ -18,8 +18,8 @@ const send = async ({to, subject, content}: {
   to: string | string[]; subject: string; content: string;
 }) => {
   const result = await transporter.sendMail({
-    // from: "lilo.fajri@zohomail.com",
-    from: "lilo.fs444@gmail.com",
+    from: "lilo.fajri@zohomail.com",
+    // from: "",
     to,
     subject,
     html: content,

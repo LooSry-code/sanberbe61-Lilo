@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import { encrypt } from "../utils/encryption";
 import mail from "../utils/mail";
+import invoice from "../utils/invoice";
 
 export interface User {
   fullName: string;
@@ -28,7 +29,7 @@ const UserSchema = new Schema<User>(
     email: {
       type: Schema.Types.String,
       required: true,
-      // unique: true,
+      unique: true,
     },
     password: {
       type: Schema.Types.String,
@@ -74,6 +75,31 @@ UserSchema.post("save", async function (doc, next) {
   await mail.send({
     to: user.email,
     subject: "Register Success",
+    content,
+  });
+
+  next();
+}),
+
+UserSchema.pre("updateOne", async function (next) {
+  const user = (this as unknown as { _update: any })._update as User;
+  user.password = encrypt(user.password);
+  next();
+});
+
+UserSchema.post("save", async function (doc, next) {
+  const user = doc;
+
+  // send mail
+  console.log("Send Invoice to", user.email);
+
+  const content = await invoice.render("invoice.ejs", {
+    username: user.username,
+  });
+
+  await invoice.send({
+    to: user.email,
+    subject: "Order Success",
     content,
   });
 
