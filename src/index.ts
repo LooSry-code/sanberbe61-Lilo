@@ -2,6 +2,8 @@ import express from "express";
 import db from "./utils/database";
 import routes from "./routes/api";
 import bodyParser from "body-parser";
+import docs from "./docs/route";
+//import routesApi from "./docs/route";
 
 const PORT = 3000;
 
@@ -15,6 +17,8 @@ async function init() {
     app.use(bodyParser.urlencoded({ extended: true }));
 
     app.use("/api", routes);
+ //   app.use("/api", routesApi);
+    docs(app);
 
     // http://localhost:3000/api
 

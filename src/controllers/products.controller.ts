@@ -14,6 +14,18 @@ import { IPaginationQuery } from "../utils/interfaces";
 
 export default {
   async create(req: Request, res: Response) {
+    /**
+     #swagger.tags = ['Products']
+     #swagger.security = [{
+      "bearerAuth": []
+     }]
+     #swagger.requestBody = {
+      required: true,
+      schema: {
+        $ref: "#/components/schemas/ProductCreateRequest"
+      }
+     }
+     */
     try {
       const result = await create(req.body);
       res.status(201).json({
@@ -29,6 +41,9 @@ export default {
     }
   },
   async findAll(req: Request, res: Response) {
+    /**
+     #swagger.tags = ['Products']
+     */
     try {
       const {
         limit = 10,
@@ -57,6 +72,9 @@ export default {
     }
   },
   async findOne(req: Request, res: Response) {
+     /**
+     #swagger.tags = ['Products']
+     */
     try {
       const result = await findOne(req.params?.id);
 
@@ -73,6 +91,18 @@ export default {
     }
   },
   async update(req: Request, res: Response) {
+    /**
+     #swagger.tags = ['Products']
+     #swagger.security = [{
+      "bearerAuth": []
+     }]
+     #swagger.requestBody = {
+      required: true,
+      schema: {
+        $ref: "#/components/schemas/ProductCreateRequest"
+      }
+     }
+    */
     try {
       const result = await update(req.params?.id, req.body);
 
@@ -89,6 +119,12 @@ export default {
     }
   },
   async delete(req: Request, res: Response) {
+    /**
+     #swagger.tags = ['Products']
+     #swagger.security = [{
+      "bearerAuth": []
+     }]
+    */
     try {
       const result = await remove(req.params?.id);
 

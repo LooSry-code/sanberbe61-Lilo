@@ -6,6 +6,7 @@ import productsController from "../controllers/products.controller";
 import categoriesController from "../controllers/categories.controller";
 import authController from "../controllers/auth.controller";
 import authMiddleware from "../middlewares/auth.middleware";
+import rbacMiddleware from "../middlewares/rbac.middleware";
 
 const router = express.Router();
 
@@ -31,5 +32,8 @@ router.post('/auth/login',authController.login);
 router.post('/auth/register', authController.register);
 router.get('/auth/me', authMiddleware, authController.me);
 router.put('/auth/profile', authMiddleware, authController.profile);
+
+// RBAC
+router.post('/auth/me', [authMiddleware, rbacMiddleware(["admin"])], authController.me);
 
 export default router;

@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { encrypt } from "../utils/encryption";
+import mail from "../utils/mail";
 
 export interface User {
   fullName: string;
@@ -27,7 +28,7 @@ const UserSchema = new Schema<User>(
     email: {
       type: Schema.Types.String,
       required: true,
-      unique: true,
+      // unique: true,
     },
     password: {
       type: Schema.Types.String,
@@ -59,6 +60,25 @@ UserSchema.pre("updateOne", async function (next) {
   user.password = encrypt(user.password);
   next();
 });
+
+UserSchema.post("save", async function (doc, next) {
+  const user = doc;
+
+  // send mail
+  console.log("Send Email to", user.email);
+
+  const content = await mail.render("register.-success.ejs", {
+    username: user.username,
+  });
+
+  await mail.send({
+    to: user.email,
+    subject: "Register Success",
+    content,
+  });
+
+  next();
+}),
 
 UserSchema.methods.toJSON = function () {
   const user = this.toObject();
